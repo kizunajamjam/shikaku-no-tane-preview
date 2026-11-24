@@ -777,7 +777,12 @@
     practice.elapsed = 0;
     practice.visibleSince = performance.now();
     renderPractice();
-    byId("practice-question").focus();
+    returnToPracticeQuestion();
+  }
+
+  function returnToPracticeQuestion() {
+    byId("practice-question").focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   function trackPracticeTime() {
@@ -829,7 +834,7 @@
     run.feedback += streakReward(habit);
     if (record.mock) run.feedback += "　" + practiceEngine.describeResult(record.mock);
     renderPlan(true);
-    (byId("next-question").hidden ? byId("leave-practice") : byId("next-question")).focus();
+    returnToPracticeQuestion();
   }
 
   function nextPracticeQuestion() {
@@ -1026,7 +1031,7 @@
     if (practice?.stage !== "question") return;
     practice.stage = "answer";
     renderPractice();
-    byId("grade-correct").focus();
+    returnToPracticeQuestion();
   });
   byId("grade-correct").addEventListener("click", () => gradePractice("independent"));
   byId("grade-missed").addEventListener("click", () => gradePractice("missed"));
