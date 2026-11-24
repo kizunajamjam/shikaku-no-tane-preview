@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="styles.css?v=45">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -52,23 +52,13 @@
 
   <main id="main" tabindex="-1">
     <section class="view setup-view active" id="setup-view" aria-labelledby="setup-title">
-      <div class="setup-intro">
-        <h1 id="setup-title">自分のペースで<br><span>資格の勉強</span>を始める</h1>
-        <p>1問解いたら、芽が出た。</p>
-        <div class="setup-actions">
-          <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
-          <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
-          <button type="button" id="cancel-plan" class="ghost-button" hidden>戻る</button>
-        </div>
-        <div class="record-error" id="setup-error" role="alert" hidden></div>
-        <div class="principle-grid" aria-label="設計原則">
-          <article><strong>思い出す</strong><small>資料を閉じて答える</small></article>
-          <article><strong>間隔を空ける</strong><small>別の日にもう一度解く</small></article>
-          <article><strong>分野を混ぜる</strong><small>似た問題の解き方を見分ける</small></article>
-          <article><strong>誤りを直す</strong><small>答えと理由を確かめる</small></article>
-        </div>
+      <h1 id="setup-title">教材を選ぶ</h1>
+      <div class="setup-actions">
+        <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
+        <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
+        <button type="button" id="cancel-plan" class="ghost-button" hidden>戻る</button>
       </div>
-
+      <div class="record-error" id="setup-error" role="alert" hidden></div>
     </section>
 
     <section class="view plan-view" id="plan-view" aria-labelledby="plan-heading">
