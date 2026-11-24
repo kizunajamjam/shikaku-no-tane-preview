@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="資格のタネ">
+  <rect width="512" height="512" rx="112" fill="#eaf1ff"/>
+  <circle cx="256" cy="256" r="176" fill="#fff" stroke="#cedcf5" stroke-width="12"/>
+  <g fill="#2155bf">
+    <rect x="154" y="270" width="48" height="100" rx="20"/>
+    <rect x="232" y="205" width="48" height="165" rx="20"/>
+    <rect x="310" y="140" width="48" height="230" rx="20"/>
+  </g>
+  <path d="M145 398h222" stroke="#7c9fdf" stroke-width="14" stroke-linecap="round"/>
+</svg>

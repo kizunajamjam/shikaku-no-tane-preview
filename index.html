@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="1問解いたら、芽が出た。1問から続けられる資格学習アプリ。">
+  <meta name="apple-mobile-web-app-title" content="資格のタネ">
+  <meta name="theme-color" content="#f3f6fa">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>資格のタネ</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/app-icon.svg">
+  <link rel="preload" href="fonts/dotgothic16.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=30">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="topbar">
+    <button class="brand" id="brand-button" type="button" aria-label="資格のタネ ホーム">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <strong>資格のタネ</strong>
+    </button>
+    <div class="top-actions">
+      <button class="google-button" id="google-connect" type="button" aria-label="Googleで同期" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285f4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z"/><path fill="#34a853" d="M12 22c2.7 0 5-.9 6.6-2.4L15.4 17c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="#fbbc05" d="M6.4 13.9A6 6 0 0 1 6.1 12c0-.7.1-1.3.3-1.9V7.5H3.1A10 10 0 0 0 2 12c0 1.6.4 3.1 1.1 4.5l3.3-2.6Z"/><path fill="#ea4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.8A9.7 9.7 0 0 0 12 2a10 10 0 0 0-8.9 5.5l3.3 2.6A6 6 0 0 1 12 6Z"/></svg>
+        <span>Googleで同期</span>
+      </button>
+      <details class="account-menu" id="account-menu" hidden>
+        <summary><span class="account-avatar" id="account-avatar">G</span><span id="account-name">Google</span></summary>
+        <div class="account-popover">
+          <strong id="account-email"></strong>
+          <p id="sync-status">Google Driveと同期済み</p>
+          <button id="sync-now" type="button">今すぐ同期</button>
+          <button id="disconnect-google" type="button">連携を解除</button>
+        </div>
+      </details>
+      <button type="button" class="icon-button menu-toggle" id="open-menu" aria-label="メニューを開く" aria-haspopup="dialog" aria-controls="site-menu" hidden><span aria-hidden="true"></span></button>
+    </div>
+  </header>
+  <dialog id="site-menu" aria-labelledby="menu-title">
+    <div class="menu-heading"><h2 id="menu-title">メニュー</h2><button class="icon-button" type="button" id="close-menu" aria-label="メニューを閉じる">×</button></div>
+    <nav aria-label="学習メニュー">
+        <a href="#home">ホーム</a>
+        <a href="#mock">簡易模試</a>
+        <a href="#questions">練習問題</a>
+        <a href="#curriculum">カリキュラム</a>
+        <a href="#history">学習記録</a>
+        <a href="#settings">資格・設定</a>
+    </nav>
+  </dialog>
+
+  <main id="main" tabindex="-1">
+    <section class="view setup-view active" id="setup-view" aria-labelledby="setup-title">
+      <div class="setup-intro">
+        <h1 id="setup-title">自分のペースで<br><span>資格の勉強</span>を始める</h1>
+        <p>1問解いたら、芽が出た。</p>
+        <button type="button" id="quick-start" class="primary-button quick-start" hidden>お試しで1問解く</button>
+        <div class="principle-grid" aria-label="設計原則">
+          <article><strong>思い出す</strong><small>資料を閉じて答える</small></article>
+          <article><strong>間隔を空ける</strong><small>別の日にもう一度解く</small></article>
+          <article><strong>分野を混ぜる</strong><small>似た問題の解き方を見分ける</small></article>
+          <article><strong>誤りを直す</strong><small>答えと理由を確かめる</small></article>
+        </div>
+      </div>
+
+      <form class="setup-card" id="plan-form" novalidate>
+        <fieldset class="setup-fields" disabled>
+        <div class="form-heading">
+          <h2 id="setup-heading">何を学びますか？</h2>
+          <button id="oracle-start" type="button" class="ghost-button">Oracle Silver DBA の試験対策を始める</button>
+          <p>資格名は任意です。今は仮の目標名でも構いません。</p>
+        </div>
+        <div class="field full-field">
+          <label for="plan-title">学習目標</label>
+          <input id="plan-title" name="title" type="text" maxlength="60" placeholder="例：次に受ける資格試験">
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="current-level">現在地</label>
+            <select id="current-level" name="level">
+              <option value="beginner">これから学ぶ</option>
+              <option value="intermediate">一通り触れた</option>
+              <option value="review">復習・再受験</option>
+            </select>
+          </div>
+        </div>
+        <div class="field full-field">
+          <label for="domains">学習分野</label>
+          <textarea id="domains" name="domains" rows="4" placeholder="1行に1分野。まだ未定なら、基礎知識・応用問題・実践演習などでも構いません。"></textarea>
+          <small>1行に1分野。「基礎」など、仮の分野1つから始められます。</small>
+        </div>
+        <button class="primary-button generate-button" type="submit">学習を始める</button>
+        <button class="ghost-button cancel-plan" type="button" id="cancel-plan" hidden>元の計画に戻る</button>
+        <p class="privacy-note">端末内に保存されます。Google連携後は、学習メモを含む記録を本人のDriveアプリ専用領域にも同期します。</p>
+        </fieldset>
+        <div class="form-error" id="form-error" role="alert" hidden></div>
+      </form>
+    </section>
+
+    <section class="view plan-view" id="plan-view" aria-labelledby="plan-heading">
+      <div class="plan-hero" data-page="home">
+        <h1 id="plan-heading" tabindex="-1">資格試験</h1>
+      </div>
+
+      <div id="section-header" hidden><a href="#home">‹ ホーム</a><h1 id="section-title" tabindex="-1"></h1></div>
+      <section class="panel practice-panel" aria-label="今日のチャレンジ">
+        <div class="practice-options" id="practice-options">
+          <h2>今日のチャレンジ</h2>
+          <p id="daily-streak"></p>
+          <p id="challenge-intro"></p>
+          <button type="button" class="primary-button" id="start-mini">今日のチャレンジを始める</button>
+        </div>
+        <div class="quest">
+          <div><strong id="quest-title"></strong><span id="quest-count"></span></div>
+          <progress id="quest-progress" max="3" value="0" aria-label="今日解いた問い"></progress>
+          <span id="quest-level"></span>
+        </div>
+        <div id="practice-run" hidden>
+          <p class="practice-meta" id="practice-position"></p>
+          <h2 id="practice-question" tabindex="-1"></h2>
+          <div class="practice-choices" id="practice-choices"></div>
+          <p class="practice-answer" id="practice-answer" hidden></p>
+          <p class="practice-feedback" id="practice-feedback" role="status"></p>
+          <div class="practice-actions">
+            <button type="button" id="reveal-answer" class="primary-button">答えを確かめる</button>
+            <button type="button" id="grade-correct" class="primary-button">自力で解けた</button>
+            <button type="button" id="grade-missed" class="ghost-button">もう一度復習</button>
+            <button type="button" id="next-question" class="primary-button">次の1問へ</button>
+            <button type="button" id="leave-practice" class="ghost-button">ここで終える</button>
+          </div>
+        </div>
+        <div id="challenge-result" class="challenge-result" hidden>
+          <h2 id="challenge-title" tabindex="-1">チャレンジクリア</h2>
+          <p class="challenge-score" id="challenge-score"></p>
+          <p id="challenge-reward"></p>
+          <ul id="challenge-missed" aria-label="もう一度復習する問い"></ul>
+          <div class="practice-actions">
+            <button type="button" id="retry-challenge" class="primary-button">間違えた問いに再挑戦</button>
+            <button type="button" id="repeat-challenge" class="ghost-button">次のチャレンジへ</button>
+            <button type="button" id="end-challenge" class="ghost-button">ここで終える</button>
+          </div>
+        </div>
+      </section>
+
+      <div data-page="home">
+        <section id="exam-outlook" class="panel standing-panel" aria-labelledby="standing-heading" hidden>
+          <h2 id="standing-heading">おすすめの受験時期</h2>
+          <p id="exam-estimate"></p>
+          <details id="exam-basis" hidden><summary>目安の根拠</summary><p id="exam-explanation"></p></details>
+        </section>
+      </div>
+      <section data-page="mock" class="menu-page" hidden>
+        <section id="timed-mock" class="panel" hidden>
+          <h2>本番形式の模試</h2>
+          <p id="timed-mock-info"></p>
+          <div id="timed-mock-sets" class="practice-actions"></div>
+          <div id="timed-mock-run" hidden>
+            <p id="timed-mock-clock"></p>
+            <p id="timed-mock-position"></p>
+            <form id="timed-mock-answer"><fieldset><legend id="timed-mock-question" tabindex="-1"></legend><div id="timed-mock-choices"></div></fieldset></form>
+            <div class="practice-actions">
+              <button id="timed-mock-prev" type="button" class="ghost-button">前の問題</button>
+              <button id="timed-mock-next" type="button" class="primary-button">次の問題</button>
+              <button id="timed-mock-submit" type="button" class="ghost-button">提出して採点</button>
+            </div>
+          </div>
+          <p id="timed-mock-message" role="status"></p>
+          <p id="timed-mock-storage-status" role="status" hidden></p>
+          <div id="timed-mock-review"></div>
+        </section>
+        <div class="panel">
+        <p id="mock-availability"></p>
+        <p id="trial-mock-note" hidden>模試の流れを試すためのセットです。結果は資格試験の合格見込みに含まれません。</p>
+        <label>合格ライン <input id="pass-mark" type="number" min="1" max="100" step="1" value="70" required> ％</label>
+        <button type="button" class="ghost-button" id="start-mock">模試を始める</button>
+        <p id="mock-result" class="mock-result" role="status"></p>
+        <section id="oracle-diagnosis" hidden>
+          <h2>分野別の復習</h2>
+          <p id="oracle-coverage"></p>
+          <button type="button" class="ghost-button" id="oracle-next"></button>
+          <details><summary>全分野の内訳</summary><ul id="oracle-domains"></ul></details>
+        </section>
+        <details class="mock-method"><summary>想定合格率の見方</summary><p>直近の模試の正答数を使い、同じ問題数・難度の模試で設定ラインに届く確率を推定します。実試験の出題配分や合否データによる補正はしていません。問いの偏りや自己採点で値が変わります。</p></details>
+        </div>
+      </section>
+      <section data-page="questions" class="menu-page" hidden>
+        <div class="panel">
+        <form id="review-item-form" class="review-item-form">
+          <div class="field"><label for="review-domain">学習分野</label><select id="review-domain" required></select></div>
+          <div class="field"><label for="review-question">問い</label><input id="review-question" required maxlength="180" placeholder="例：今日覚えた用語を一言で説明すると？"></div>
+          <div class="field"><label for="review-answer">答えまたは教材の参照先</label><textarea id="review-answer" required maxlength="1000" rows="2" placeholder="例：教科書の第3章 p.45"></textarea></div>
+          <details class="choice-settings"><summary>選択式にする</summary><div class="field"><label for="review-distractors">誤答の選択肢（1行ずつ、最大3つ）</label><textarea id="review-distractors" maxlength="1000" rows="2"></textarea><small>上の「答え」に正解を入力してください。</small></div></details>
+          <button class="primary-button" type="submit">問いを登録</button>
+        </form>
+        <ul class="review-items" id="review-items"></ul>
+        </div>
+      </section>
+      <section data-page="curriculum" class="menu-page" hidden>
+      <div class="plan-overview">
+        <p id="plan-period"></p>
+        <div class="progress-orbit" id="progress-orbit" style="--progress: 0">
+          <div><strong id="progress-percent">0</strong><span>%</span><small>完了</small></div>
+        </div>
+      </div>
+      <section class="today-card" id="today-card" aria-labelledby="today-heading">
+        <div class="today-topline">
+          <div>
+            <h2 id="today-heading">次の学習</h2>
+          </div>
+          <span class="phase-pill" id="today-phase">診断</span>
+        </div>
+        <div class="today-grid">
+          <div class="session-detail">
+            <p class="session-date" id="today-date">—</p>
+            <h3 id="today-title">—</h3>
+            <p class="focus-domains" id="today-domains">—</p>
+            <ol class="task-list" id="today-tasks"></ol>
+            <div class="recall-list" id="recall-list"></div>
+            <p class="review-summary" id="review-summary" aria-live="polite"></p>
+          </div>
+          <form class="record-form" id="record-form">
+            <h3>学習を記録</h3>
+            <div class="record-fields">
+              <label>実績時間 <span><input id="actual-minutes" type="number" min="1" max="360" required> 分</span></label>
+              <label>理解度（任意）
+                <select id="confidence">
+                  <option value="">未入力</option>
+                  <option value="1">1 — まだ曖昧</option>
+                  <option value="2">2 — 要復習</option>
+                  <option value="3">3 — おおむね理解</option>
+                  <option value="4">4 — 説明できる</option>
+                  <option value="5">5 — 応用できる</option>
+                </select>
+              </label>
+              <label>学習メモ <textarea id="study-note" rows="3" maxlength="300" placeholder="迷った点、次回に確認すること"></textarea></label>
+            </div>
+            <p class="record-error" id="record-error" role="alert" hidden></p>
+            <button class="primary-button" type="submit">このセッションを完了</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="phases-heading">
+        <div class="section-heading">
+          <h2 id="phases-heading">学習の流れ</h2>
+          <p>理解した直後ではなく、忘れかけた頃に再び取り出します。</p>
+        </div>
+        <div class="phase-timeline" id="phase-timeline"></div>
+      </section>
+
+        <article class="panel schedule-panel" aria-labelledby="schedule-heading">
+          <div class="section-heading compact"><h2 id="schedule-heading">学習スケジュール</h2></div>
+          <div class="schedule-list" id="schedule-list"></div>
+        </article>
+      <aside class="evidence-note">
+        <strong>設計上の注意</strong>
+        <p>復習間隔や時間配分は研究原則を実用向けに具体化した初期値で、個人に最適な数値を保証するものではありません。理解度と記録を見ながら調整できる基盤として設計しています。</p>
+      </aside>
+      </section>
+      <section data-page="history" class="menu-page" hidden>
+        <div class="standing-grid">
+          <div>
+            <p id="habit-summary" class="standing-stat"></p>
+            <ol id="activity-week" aria-label="直近7日間の学習"></ol>
+          </div>
+          <div>
+            <p class="standing-stat" id="solved-stat"></p>
+            <p id="review-status"></p>
+          </div>
+        </div>
+      <section class="stats-grid" aria-label="カリキュラム概要">
+        <article class="stat-card"><span>完了した回数</span><strong id="stat-completed">0</strong></article>
+        <article class="stat-card"><span>実際の学習時間</span><strong id="stat-actual">0分</strong></article>
+        <article class="stat-card accent-card"><span>平均理解度</span><strong id="stat-confidence">—</strong></article>
+      </section>
+
+        <article class="panel records-panel" aria-labelledby="records-heading">
+          <div class="section-heading compact"><h2 id="records-heading">学習記録</h2></div>
+          <label class="history-scope"><input type="checkbox" id="all-records"> 他の資格・過去の計画の記録も表示</label>
+          <div class="records-list" id="records-list"></div>
+        </article>
+      </section>
+      <section data-page="settings" class="menu-page" hidden>
+      <div class="plan-picker">
+        <div class="field"><label for="plan-select">学習する資格・計画</label><select id="plan-select"></select></div>
+        <button class="ghost-button" id="add-plan" type="button">別の資格・目標を追加</button>
+      </div>
+      <div class="plan-actions" id="plan-actions" hidden>
+        <button class="ghost-button" id="edit-plan" type="button">条件を変更</button>
+        <button class="ghost-button" id="reset-all" type="button">すべてのデータを削除</button>
+      </div>
+      <details id="pass-record" class="dashboard-details">
+        <summary>本試験の合格記録</summary>
+        <p id="pass-record-date" tabindex="-1" hidden></p>
+        <button type="button" class="ghost-button" id="record-pass">合格を記録</button>
+        <div id="pass-confirmation" hidden>
+          <p>この資格の本試験合格を、今日の日付で記録します。</p>
+          <button type="button" class="primary-button" id="confirm-pass">記録する</button>
+          <button type="button" class="ghost-button" id="cancel-pass">キャンセル</button>
+        </div>
+      </details>
+      <details class="dashboard-details install-guide" id="install-guide" hidden>
+        <summary>ホーム画面に追加（任意）</summary>
+        <p>ブラウザーのままでも学習できます。ホーム画面に追加すると、アイコンからすぐに開けます。</p>
+        <button type="button" class="ghost-button" id="install-app" hidden>ホーム画面に追加</button>
+        <ul>
+          <li>iPhoneのSafariでは、共有メニューから「ホーム画面に追加」。表示される場合は「ウェブアプリとして開く」をオンにします。</li>
+          <li>AndroidのChromeでは、メニューからインストールを選びます。</li>
+        </ul>
+      </details>
+      <details class="dashboard-details">
+        <summary>学習リマインダー（任意）</summary>
+        <p id="study-reminder-help">ファイルを保存し、対応するカレンダーアプリで取り込んでください。取り込み後はカレンダーで通知を確認・変更できます。</p>
+        <form id="study-reminder" class="record-fields" aria-describedby="study-reminder-help">
+          <div class="field-grid">
+            <div class="field">
+              <label for="study-reminder-day">繰り返し</label>
+              <select id="study-reminder-day" name="day" required>
+                <option value="">選択してください</option>
+                <option value="daily">毎日</option>
+                <option value="MO">毎週月曜日</option>
+                <option value="TU">毎週火曜日</option>
+                <option value="WE">毎週水曜日</option>
+                <option value="TH">毎週木曜日</option>
+                <option value="FR">毎週金曜日</option>
+                <option value="SA">毎週土曜日</option>
+                <option value="SU">毎週日曜日</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="study-reminder-time">時刻</label>
+              <input id="study-reminder-time" name="time" type="time" required>
+            </div>
+          </div>
+          <div><button type="submit" class="ghost-button">カレンダーファイルを保存（.ics）</button></div>
+          <div id="study-reminder-status" role="status"></div>
+        </form>
+      </details>
+      </section>
+
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="google-config.js"></script>
+  <script src="curriculum.js?v=20"></script>
+  <script src="plan-library.js"></script>
+  <script src="practice.js?v=36"></script>
+  <script src="trial-questions.js"></script>
+  <script src="materials/oracle-silver/oracle-silver-dba.js?v=31"></script>
+  <script src="materials/oracle-silver/oracle-silver-sql.js?v=31"></script>
+  <script src="materials/oracle-silver/oracle-silver-dba-extra.js?v=31"></script>
+  <script src="materials/oracle-silver/oracle-silver-sql-extra.js?v=31"></script>
+  <script src="materials/oracle-silver/oracle-silver-cases.js?v=31"></script>
+  <script src="materials/oracle-silver/scenarios.js?v=31"></script>
+  <script src="materials/oracle-silver/dba-practice.js?v=31"></script>
+  <script src="materials/oracle-silver/sql-practice.js?v=31"></script>
+  <script src="materials/oracle-silver/final-practice.js?v=31"></script>
+  <script src="materials/oracle-silver/mock-a.js?v=31"></script>
+  <script src="materials/oracle-silver/mock-b.js?v=31"></script>
+  <script src="materials/oracle-silver/oracle-silver.js?v=31"></script>
+  <script src="timed-mock.js?v=31"></script>
+  <script src="google-sync.js?v=11"></script>
+  <script src="study-storage.js"></script>
+  <script src="calendar-reminder.js"></script>
+  <script src="app.js?v=37"></script>
+</body>
+</html>
