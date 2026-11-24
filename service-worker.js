@@ -1,11 +1,10 @@
 "use strict";
 
-const CACHE_NAME = "pass-deck-shell-v39";
+const CACHE_NAME = "pass-deck-shell-v40";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=39",
-  "./fonts/dotgothic16.woff2",
+  "./styles.css?v=40",
   "./curriculum.js?v=20",
   "./plan-library.js",
   "./practice.js?v=36",
