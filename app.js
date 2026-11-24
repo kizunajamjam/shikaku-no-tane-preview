@@ -24,11 +24,7 @@
     accountName: byId("account-name"),
     accountEmail: byId("account-email"),
     syncStatus: byId("sync-status"),
-    form: byId("plan-form"),
-    formError: byId("form-error"),
-    titleInput: byId("plan-title"),
-    levelInput: byId("current-level"),
-    domainsInput: byId("domains"),
+    setupError: byId("setup-error"),
     planHeading: byId("plan-heading"),
     planPeriod: byId("plan-period"),
     progressOrbit: byId("progress-orbit"),
@@ -65,7 +61,6 @@
   let recallTasks = [];
   let recordLimit = 30;
   let selectedSessionId = null;
-  let revisingGoal = null;
   let practice = null;
   let displayedStudyDate = "";
   let dayTimer;
@@ -179,7 +174,7 @@
       renderPlan();
       showView("plan");
     } else {
-      fillSetupForm();
+      renderSetup();
       showView("setup");
     }
   }
@@ -205,77 +200,50 @@
     return `${hours}時間${minutes ? `${minutes}分` : ""}`;
   }
 
-  function fillSetupForm(config) {
-    const source = config || {
-      title: "次に受ける資格試験",
-      level: "beginner",
-      domains: ["基礎知識", "応用問題", "実践演習"]
-    };
-    ui.titleInput.value = source.title || "";
-    ui.levelInput.value = source.level || "beginner";
-    ui.domainsInput.value = Array.isArray(source.domains) ? source.domains.join("\n") : source.domains || "";
-    ui.formError.hidden = true;
+  function renderSetup() {
+    ui.setupError.hidden = true;
     byId("cancel-plan").hidden = !state.plan;
     byId("quick-start").hidden = Boolean(state.plan);
-    byId("oracle-start").hidden = Boolean(config);
-    byId("setup-heading").textContent = config ? "学習目標と分野を変更" : "何を学びますか？";
+    byId("oracle-start").hidden = false;
   }
 
-  function formConfig() {
+  async function createPlan(title, domains, pack = null) {
+    const quickStart = !pack;
     const startDate = engine.toDateKey();
-    return {
-      title: ui.titleInput.value,
+    const result = engine.generateCurriculum({
+      title,
       startDate,
-      // Organize the first curriculum cycle separately from the estimated exam date.
-      targetDate: engine.addDays(startDate, 83),
-      daysPerWeek: 7,
-      minutesPerSession: 15,
-      level: ui.levelInput.value,
-      domains: ui.domainsInput.value
-    };
-  }
-
-  async function submitPlan(event) {
-    event.preventDefault();
-    if (saving) return;
-    await createPlan(formConfig());
-  }
-
-  async function createPlan(config, quickStart = false, pack = null) {
-    const result = engine.generateCurriculum(config);
+      targetDate: engine.addDays(startDate, quickStart ? 28 : 83),
+      daysPerWeek: quickStart ? 1 : 7,
+      minutesPerSession: quickStart ? 5 : 15,
+      level: "beginner",
+      domains
+    });
     if (result.errors.length) {
-      ui.formError.textContent = result.errors.join(" ");
-      ui.formError.hidden = false;
+      showToast(result.errors.join(" "));
       return;
     }
-    ui.formError.hidden = true;
     result.plan.selfPaced = !quickStart;
     result.plan.id = newId("plan");
-    result.plan.qualificationId = revisingGoal || result.plan.id;
+    result.plan.qualificationId = result.plan.id;
     const next = library.selectPlan(state, result.plan);
     if (quickStart) {
       result.plan.trial = true;
       next.items = [...state.items, ...practiceEngine.buildTrialItems(result.plan, trialQuestions.cards)];
-    } else if (pack) {
+    } else {
       result.plan.packId = pack.id;
       result.plan.oracleEdition = 2;
       next.items = [...state.items, ...pack.cards.map((card) => ({
         ...card, cardId: card.id, id: result.plan.id + "-" + card.id, planId: result.plan.id,
         qualificationId: result.plan.qualificationId, createdAt: result.plan.generatedAt
       }))];
-    } else if (revisingGoal && state.plan.packId) {
-      result.plan.packId = state.plan.packId;
-      result.plan.oracleEdition = state.plan.oracleEdition;
-    } else if (revisingGoal && state.plan.trial) {
-      result.plan.trial = true;
     }
     if (!await saveState(next)) return;
     clearPlanInputs();
     renderPlan();
     showView("plan");
     if (location.hash) location.hash = "home";
-    if (quickStart || pack) startPractice("mini");
-    else showToast("カリキュラムを作成しました");
+    startPractice("mini");
   }
 
   function currentPlanRecords() {
@@ -284,7 +252,6 @@
 
   function clearPlanInputs() {
     byId("pass-confirmation").hidden = true;
-    revisingGoal = null;
     selectedSessionId = null;
     practice = null;
     recordLimit = 30;
@@ -912,20 +879,13 @@
     showToast("学習記録を保存しました" + streakReward(habit));
   }
 
-  function openSetup(revise) {
-    if (saving) return;
-    revisingGoal = revise ? state.plan.qualificationId || state.plan.id : null;
-    fillSetupForm(revise ? state.plan.config : null);
-    showView("setup");
-  }
-
   async function resetAll() {
     if (saving || !window.confirm("すべての資格の計画、登録した問い、学習記録、合格記録を削除しますか？")) return;
     const resetAt = new Date().toISOString();
     if (!await saveState({ plan: null, otherPlans: [], records: [], items: [], harvests: [], resetAt })) return;
     timedMock.clear();
     clearPlanInputs();
-    fillSetupForm();
+    renderSetup();
     showView("setup");
     showToast("すべてのデータを削除しました");
   }
@@ -1006,15 +966,12 @@
     deferredInstallPrompt = null;
   }
 
-  ui.form.addEventListener("submit", submitPlan);
   byId("quick-start").addEventListener("click", () => {
     if (saving || state.plan) return;
-    const startDate = engine.toDateKey();
-    createPlan({ title: "お試し学習", startDate, targetDate: engine.addDays(startDate, 28),
-      daysPerWeek: 1, minutesPerSession: 5, domains: [trialQuestions.domain], level: "beginner" }, true);
+    createPlan("お試し学習", [trialQuestions.domain]);
   });
   async function startOracle() {
-    if (saving || revisingGoal) return;
+    if (saving) return;
     const existing = library.plansIn(state).filter((plan) => plan.packId === oracle.id)
       .sort((a, b) => b.generatedAt.localeCompare(a.generatedAt))[0];
     if (existing) {
@@ -1026,8 +983,7 @@
       startPractice("mini");
       return;
     }
-    await createPlan({ ...formConfig(), title: oracle.title,
-      domains: [...new Set(oracle.cards.map((card) => card.domain))] }, false, oracle);
+    await createPlan(oracle.title, [...new Set(oracle.cards.map((card) => card.domain))], oracle);
   }
   byId("oracle-start").addEventListener("click", startOracle);
   byId("trial-oracle-start").addEventListener("click", startOracle);
@@ -1062,7 +1018,6 @@
   }
   document.addEventListener("visibilitychange", watchStudyDay);
   watchStudyDay();
-  byId("edit-plan").addEventListener("click", () => openSetup(true));
   byId("record-pass").addEventListener("click", () => {
     byId("pass-confirmation").hidden = false;
     byId("confirm-pass").focus();
@@ -1072,8 +1027,17 @@
     byId("pass-confirmation").hidden = true;
     byId("record-pass").focus();
   });
-  byId("add-plan").addEventListener("click", () => openSetup(false));
-  byId("cancel-plan").addEventListener("click", () => { revisingGoal = null; renderPlan(); showView("plan"); });
+  byId("add-plan").addEventListener("click", () => {
+    if (saving) return;
+    renderSetup();
+    showView("setup");
+    byId("oracle-start").focus({ preventScroll: true });
+  });
+  byId("cancel-plan").addEventListener("click", () => {
+    if (saving) return;
+    showView("plan");
+    byId("add-plan").focus({ preventScroll: true });
+  });
   ui.planSelect.addEventListener("change", switchPlan);
   ui.allRecords.addEventListener("change", () => { recordLimit = 30; renderRecords(); });
   byId("reset-all").addEventListener("click", resetAll);
@@ -1093,21 +1057,19 @@
 
   async function initialize() {
     initializePwa();
-    ui.form.querySelector("fieldset").disabled = true;
     try {
       state = normalizeState(await storage.load());
     } catch (error) {
       console.warn("保存データを読み込めませんでした。", error);
-      ui.formError.textContent = "端末の保存領域を開けませんでした。別のタブを閉じ、再読み込みしてください。";
-      ui.formError.hidden = false;
+      ui.setupError.textContent = "端末の保存領域を開けませんでした。別のタブを閉じ、再読み込みしてください。";
+      ui.setupError.hidden = false;
       return;
     }
-    ui.form.querySelector("fieldset").disabled = false;
     if (state.plan) {
       renderPlan();
       showView("plan");
     } else {
-      fillSetupForm();
+      renderSetup();
       showView("setup");
     }
     await initializeGoogleSync();

@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=44">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -58,7 +58,9 @@
         <div class="setup-actions">
           <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
           <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
+          <button type="button" id="cancel-plan" class="ghost-button" hidden>戻る</button>
         </div>
+        <div class="record-error" id="setup-error" role="alert" hidden></div>
         <div class="principle-grid" aria-label="設計原則">
           <article><strong>思い出す</strong><small>資料を閉じて答える</small></article>
           <article><strong>間隔を空ける</strong><small>別の日にもう一度解く</small></article>
@@ -67,37 +69,6 @@
         </div>
       </div>
 
-      <form class="setup-card" id="plan-form" novalidate>
-        <fieldset class="setup-fields" disabled>
-        <div class="form-heading">
-          <h2 id="setup-heading">何を学びますか？</h2>
-          <p>資格名は任意です。今は仮の目標名でも構いません。</p>
-        </div>
-        <div class="field full-field">
-          <label for="plan-title">学習目標</label>
-          <input id="plan-title" name="title" type="text" maxlength="60" placeholder="例：次に受ける資格試験">
-        </div>
-        <div class="field-grid">
-          <div class="field">
-            <label for="current-level">現在地</label>
-            <select id="current-level" name="level">
-              <option value="beginner">これから学ぶ</option>
-              <option value="intermediate">一通り触れた</option>
-              <option value="review">復習・再受験</option>
-            </select>
-          </div>
-        </div>
-        <div class="field full-field">
-          <label for="domains">学習分野</label>
-          <textarea id="domains" name="domains" rows="4" placeholder="1行に1分野。まだ未定なら、基礎知識・応用問題・実践演習などでも構いません。"></textarea>
-          <small>1行に1分野。「基礎」など、仮の分野1つから始められます。</small>
-        </div>
-        <button class="primary-button generate-button" type="submit">学習を始める</button>
-        <button class="ghost-button cancel-plan" type="button" id="cancel-plan" hidden>元の計画に戻る</button>
-        <p class="privacy-note">端末内に保存されます。Google連携後は、学習メモを含む記録を本人のDriveアプリ専用領域にも同期します。</p>
-        </fieldset>
-        <div class="form-error" id="form-error" role="alert" hidden></div>
-      </form>
     </section>
 
     <section class="view plan-view" id="plan-view" aria-labelledby="plan-heading">
@@ -289,10 +260,9 @@
       <section data-page="settings" class="menu-page" hidden>
       <div class="plan-picker">
         <div class="field"><label for="plan-select">学習する資格・計画</label><select id="plan-select"></select></div>
-        <button class="ghost-button" id="add-plan" type="button">別の資格・目標を追加</button>
+        <button class="ghost-button" id="add-plan" type="button">教材を選ぶ</button>
       </div>
       <div class="plan-actions" id="plan-actions" hidden>
-        <button class="ghost-button" id="edit-plan" type="button">条件を変更</button>
         <button class="ghost-button" id="reset-all" type="button">すべてのデータを削除</button>
       </div>
       <details id="pass-record" class="dashboard-details">
@@ -369,6 +339,6 @@
   <script src="google-sync.js?v=11"></script>
   <script src="study-storage.js"></script>
   <script src="calendar-reminder.js"></script>
-  <script src="app.js?v=42"></script>
+  <script src="app.js?v=44"></script>
 </body>
 </html>
