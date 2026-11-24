@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=42">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -122,9 +122,10 @@
         <div id="practice-run" hidden>
           <p class="practice-meta" id="practice-position"></p>
           <h2 id="practice-question" tabindex="-1"></h2>
+          <p id="practice-verdict" class="answer-status" role="status"></p>
           <div class="practice-choices" id="practice-choices"></div>
           <p class="practice-answer" id="practice-answer" hidden></p>
-          <p class="practice-feedback" id="practice-feedback" role="status"></p>
+          <p class="practice-feedback" id="practice-feedback"></p>
           <div class="practice-actions">
             <button type="button" id="reveal-answer" class="primary-button">答えを確かめる</button>
             <button type="button" id="grade-correct" class="primary-button">自力で解けた</button>
@@ -364,10 +365,10 @@
   <script src="materials/oracle-silver/mock-a.js?v=31"></script>
   <script src="materials/oracle-silver/mock-b.js?v=31"></script>
   <script src="materials/oracle-silver/oracle-silver.js?v=31"></script>
-  <script src="timed-mock.js?v=31"></script>
+  <script src="timed-mock.js?v=42"></script>
   <script src="google-sync.js?v=11"></script>
   <script src="study-storage.js"></script>
   <script src="calendar-reminder.js"></script>
-  <script src="app.js?v=39"></script>
+  <script src="app.js?v=42"></script>
 </body>
 </html>

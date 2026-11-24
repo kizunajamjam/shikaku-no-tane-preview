@@ -687,10 +687,15 @@
     const mode = `${label}　${index + 1} / ${questions.length} 問`;
     byId("practice-position").textContent = (practice.revisit && index === 0 ? "昨日のリベンジ　·　" : "") + mode + "　·　" + item.domain;
     byId("practice-question").textContent = item.question;
-    const wrongChoice = practice.selectedChoice && practice.selectedChoice !== item.answer ? practice.selectedChoice : "";
+    const gradedChoice = stage === "saved" && practice.selectedChoice !== undefined;
+    const wrongChoice = gradedChoice && practice.selectedChoice !== item.answer;
+    const verdict = byId("practice-verdict");
+    if (gradedChoice) verdict.dataset.result = wrongChoice ? "incorrect" : "correct";
+    else delete verdict.dataset.result;
+    verdict.textContent = gradedChoice ? (wrongChoice ? "× 不正解" : "✓ 正解") : stage === "saved" ? practice.selfAssessment : "";
     byId("practice-answer").textContent = stage === "question" ? "" :
-      (wrongChoice ? "選んだ誤答　" + wrongChoice + "\n" : "") +
-      (practice.choices.length ? "正解　" : "") + item.answer + (item.explanation ? "\n\n解説　" + item.explanation : "");
+      (wrongChoice ? "あなたの回答　" + practice.selectedChoice + "\n" : "") +
+      (gradedChoice ? "正しい答え　" : "") + item.answer + (item.explanation ? "\n\n解説　" + item.explanation : "");
     byId("practice-answer").hidden = stage === "question";
     if (stage !== "question" && state.plan.packId === oracle.id) {
       const card = oracle.cards.find((entry) => entry.id === item.cardId);
@@ -824,10 +829,10 @@
     const reward = earned ? "＋10 XP" : "復習を記録";
     const target = progress.gentleStart ? 1 : Math.min(3, schedule.length || 3);
     const goal = earned && progress.todayCount + 1 === target ? "　今日の目標クリア！" : "";
-    const feedback = choice === undefined
-      ? (outcome === "independent" ? "自力で解けました。" : "答えを確認できました。")
-      : (outcome === "independent" ? "正解！" : "解説で選んだ答えを見直しましょう。");
-    run.feedback = feedback + "　" + reward + goal;
+    if (choice === undefined) {
+      run.selfAssessment = outcome === "independent" ? "自力で解けました" : "復習として記録しました";
+    }
+    run.feedback = reward + goal;
     if (run.revisit && index === 1 && today === run.startDay && outcome === "independent") {
       run.feedback = (run.revisit === "hint" ? "昨日はヒントを見た問題、今日は自力で解けました！"
         : "昨日は解けなかった問題、今日は自力で解けました！") + "　" + reward + goal;

@@ -1,10 +1,10 @@
 "use strict";
 
-const CACHE_NAME = "pass-deck-shell-v41";
+const CACHE_NAME = "pass-deck-shell-v42";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=41",
+  "./styles.css?v=42",
   "./fonts/biz-ud-pgothic-regular.woff2",
   "./fonts/biz-ud-pgothic-bold.woff2",
   "./curriculum.js?v=20",
@@ -23,12 +23,12 @@ const APP_SHELL = [
   "./materials/oracle-silver/mock-a.js?v=31",
   "./materials/oracle-silver/mock-b.js?v=31",
   "./materials/oracle-silver/oracle-silver.js?v=31",
-  "./timed-mock.js?v=31",
+  "./timed-mock.js?v=42",
   "./google-config.js",
   "./google-sync.js?v=11",
   "./study-storage.js",
   "./calendar-reminder.js",
-  "./app.js?v=39",
+  "./app.js?v=42",
   "./manifest.webmanifest",
   "./icons/app-icon.svg",
   "./offline.html"

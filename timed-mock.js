@@ -187,7 +187,11 @@
   function renderQuestionReview({ question, index, selected, correct }) {
     const details = document.createElement("details");
     const heading = document.createElement("summary");
-    heading.textContent = (index + 1) + ". " + (correct ? "正解" : selected.length ? "要復習" : "未解答") + " · " + question.domain;
+    const verdict = document.createElement("span");
+    verdict.className = "answer-status";
+    if (selected.length) verdict.dataset.result = correct ? "correct" : "incorrect";
+    verdict.textContent = correct ? "✓ 正解" : selected.length ? "× 不正解" : "未解答";
+    heading.append((index + 1) + ". ", verdict, "　" + question.domain);
     const prompt = document.createElement("p");
     prompt.textContent = question.question;
     const chosen = document.createElement("p");
