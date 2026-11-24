@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="stylesheet" href="styles.css?v=46">
+  <link rel="stylesheet" href="styles.css?v=47">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -51,29 +51,18 @@
   </dialog>
 
   <main id="main" tabindex="-1">
-    <section class="view setup-view active" id="setup-view" aria-labelledby="setup-title">
-      <h1 id="setup-title">教材を選ぶ</h1>
-      <div class="setup-actions">
-        <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
-        <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
-        <button type="button" id="cancel-plan" class="ghost-button" hidden>戻る</button>
-      </div>
-      <div class="record-error" id="setup-error" role="alert" hidden></div>
-    </section>
-
-    <section class="view plan-view" id="plan-view" aria-labelledby="plan-heading">
+    <section class="plan-view" id="plan-view" aria-labelledby="plan-heading">
       <div class="plan-hero" data-page="home">
-        <h1 id="plan-heading" tabindex="-1">資格試験</h1>
+        <h1 id="plan-heading" tabindex="-1">ホーム</h1>
       </div>
 
       <div id="section-header" hidden><a href="#home">‹ ホーム</a><h1 id="section-title" tabindex="-1"></h1></div>
-      <section class="panel practice-panel" aria-label="今日のチャレンジ">
+      <section class="panel practice-panel" aria-label="今日のチャレンジ" hidden>
         <div class="practice-options" id="practice-options">
           <h2>今日のチャレンジ</h2>
           <p id="daily-streak"></p>
           <p id="challenge-intro"></p>
           <button type="button" class="primary-button" id="start-mini">今日のチャレンジを始める</button>
-          <button type="button" class="ghost-button trial-oracle-start" id="trial-oracle-start" hidden>Oracle Silver DBA の問題を解く</button>
         </div>
         <div class="quest">
           <div><strong id="quest-title"></strong><span id="quest-count"></span></div>
@@ -116,6 +105,18 @@
       </section>
 
       <div data-page="home">
+        <details class="panel home-materials" id="home-materials" open>
+          <summary>教材を選ぶ</summary>
+          <div class="material-options">
+            <div class="field" id="saved-materials" hidden>
+              <label for="plan-select">保存済みの教材・計画</label>
+              <select id="plan-select"></select>
+            </div>
+            <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
+            <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
+          </div>
+          <p class="record-error" id="home-error" role="alert" hidden></p>
+        </details>
         <section id="exam-outlook" class="panel standing-panel" aria-labelledby="standing-heading" hidden>
           <h2 id="standing-heading">おすすめの受験時期</h2>
           <p id="exam-estimate"></p>
@@ -255,10 +256,6 @@
         </article>
       </section>
       <section data-page="settings" class="menu-page" hidden>
-      <div class="plan-picker">
-        <div class="field"><label for="plan-select">学習する資格・計画</label><select id="plan-select"></select></div>
-        <button class="ghost-button" id="add-plan" type="button">教材を選ぶ</button>
-      </div>
       <div class="plan-actions" id="plan-actions" hidden>
         <button class="ghost-button" id="reset-all" type="button">すべてのデータを削除</button>
       </div>
@@ -336,6 +333,6 @@
   <script src="google-sync.js?v=11"></script>
   <script src="study-storage.js"></script>
   <script src="calendar-reminder.js"></script>
-  <script src="app.js?v=46"></script>
+  <script src="app.js?v=47"></script>
 </body>
 </html>

@@ -76,14 +76,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .account-popover button:hover { border-color: var(--line-bright); }
 
 main { min-height: calc(100vh - 72px); }
-.view { display: none; }
-.view.active { display: block; animation: reveal .35s ease-out; }
-@keyframes reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
-
-.setup-view { width: min(480px, calc(100% - 28px)); margin: 0 auto; padding: 24px 0 32px; }
-.setup-view h1 { margin: 0 0 14px; font-size: 1.25rem; }
-.setup-actions { display: grid; gap: 8px; }
-.setup-actions .ghost-button { min-height: 44px; font-size: .875rem; }
 
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field { min-width: 0; }
@@ -231,12 +223,14 @@ main { min-height: calc(100vh - 72px); }
   .evidence-note { display: block; }
   .evidence-note p { margin-top: 8px; }
 }
-.plan-picker, .practice-actions { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
-.plan-picker { margin-bottom: 20px; }
-.plan-picker .field { flex: 0 1 28rem; }
-.plan-picker .ghost-button, .practice-actions button { min-height: 44px; }
+.practice-actions { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
+.practice-actions button { min-height: 44px; }
 .history-scope { display: block; margin-bottom: 12px; color: var(--muted); font-size: .875rem; }
 .practice-panel { margin-bottom: 20px; }
+.home-materials { margin-bottom: 14px; padding: 4px 16px; }
+.home-materials summary { min-height: 44px; padding-block: 10px; font-weight: 700; cursor: pointer; }
+.material-options { display: grid; max-width: 30rem; gap: 8px; padding: 4px 0 12px; }
+.material-options .ghost-button { min-height: 44px; font-size: .875rem; }
 .quest { display: grid; grid-template-columns: auto minmax(40px, 1fr) auto; align-items: center; gap: 18px; padding: 13px 16px; border-radius: 12px; background: #eaf5ef; color: #20513d; }
 .quest div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
 .quest span { font-size: .875rem; font-variant-numeric: tabular-nums; }
@@ -308,7 +302,6 @@ main { min-height: calc(100vh - 72px); }
 .challenge-score { margin: 8px 0; font-size: clamp(1.375rem, 4vw, 1.75rem); font-weight: 700; }
 .challenge-result ul { padding-inline-start: 22px; color: var(--muted); }
 .challenge-result ul:empty { display: none; }
-.trial-oracle-start { margin-top: 8px; }
 .practice-choices { display: grid; gap: 9px; margin-top: 18px; }
 .practice-choices:empty { display: none; }
 .choice-button { min-height: 48px; padding: 11px 16px; border: 1px solid var(--line-bright); border-radius: 10px; background: var(--surface); color: var(--text); font-size: 1rem; font-weight: 400; line-height: 1.7; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
@@ -328,7 +321,7 @@ main { min-height: calc(100vh - 72px); }
 .install-guide > ul { padding-inline-start: 1.5rem; }
 @media (max-width: 680px) {
   .standing-grid { grid-template-columns: 1fr; gap: 8px; }
-  .practice-options .primary-button, .trial-oracle-start { width: 100%; }
+  .practice-options .primary-button { width: 100%; }
   .quest { grid-template-columns: 1fr auto; gap: 8px; }
   .quest progress { order: 1; grid-column: 1 / -1; }
   .practice-actions button { flex: 1 1 100%; }

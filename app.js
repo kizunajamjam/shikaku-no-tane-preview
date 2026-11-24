@@ -12,7 +12,6 @@
   const recallLabels = { independent: "自力でできた", hint: "ヒントが必要", missed: "できなかった" };
   const byId = (id) => document.getElementById(id);
   const ui = {
-    setupView: byId("setup-view"),
     planView: byId("plan-view"),
     planActions: byId("plan-actions"),
     planSelect: byId("plan-select"),
@@ -24,7 +23,8 @@
     accountName: byId("account-name"),
     accountEmail: byId("account-email"),
     syncStatus: byId("sync-status"),
-    setupError: byId("setup-error"),
+    homeMaterials: byId("home-materials"),
+    homeError: byId("home-error"),
     planHeading: byId("plan-heading"),
     planPeriod: byId("plan-period"),
     progressOrbit: byId("progress-orbit"),
@@ -122,22 +122,21 @@
   const menuLinks = [...siteMenu.querySelectorAll("nav a")];
 
   function renderNavigation(focusHeading = false) {
-    const link = menuLinks.find((entry) => entry.hash === location.hash) || menuLinks[0];
+    const link = (state.plan && menuLinks.find((entry) => entry.hash === location.hash)) || menuLinks[0];
     const page = link.hash.slice(1);
     const home = page === "home";
-    const inPlan = ui.planView.classList.contains("active");
-    byId("open-menu").hidden = !inPlan || Boolean(practice);
+    byId("open-menu").hidden = !state.plan || Boolean(practice);
     ui.planView.querySelectorAll("[data-page]").forEach((section) => {
       section.hidden = section.dataset.page !== page || Boolean(practice);
     });
-    ui.planView.querySelector(".practice-panel").hidden = !home && !practice;
+    ui.planView.querySelector(".practice-panel").hidden = !state.plan || (!home && !practice);
     byId("section-header").hidden = home || Boolean(practice);
     byId("section-title").textContent = link.textContent;
     for (const entry of menuLinks) {
       if (entry === link) entry.setAttribute("aria-current", "page");
       else entry.removeAttribute("aria-current");
     }
-    if (focusHeading && inPlan && !practice) {
+    if (focusHeading && !practice) {
       (home ? byId("plan-heading") : byId("section-title")).focus({ preventScroll: true });
       window.scrollTo(0, 0);
     }
@@ -154,12 +153,21 @@
     byId("main").focus();
   });
 
-  function showView(name) {
-    ui.setupView.classList.toggle("active", name === "setup");
-    ui.planView.classList.toggle("active", name === "plan");
+  function renderCurrentState() {
+    if (state.plan) {
+      ui.homeMaterials.open = false;
+      renderPlan();
+      return;
+    }
+    ui.planHeading.textContent = "ホーム";
+    ui.homeMaterials.open = true;
+    byId("saved-materials").hidden = true;
+    byId("oracle-start").hidden = false;
+    byId("quick-start").hidden = false;
+    byId("exam-outlook").hidden = true;
+    ui.planActions.hidden = true;
+    ui.planView.classList.remove("in-practice");
     renderNavigation();
-    ui.planActions.hidden = name !== "plan" || Boolean(practice);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function applyMergedState(merged) {
@@ -170,13 +178,7 @@
     if (!await saveState(next, false)) throw new Error("同期データを端末に保存できませんでした。");
     if (previousId !== state.plan?.id) clearPlanInputs();
     if (!state.plan?.sessions.some((session) => session.id === selectedSessionId)) selectedSessionId = null;
-    if (state.plan) {
-      renderPlan();
-      showView("plan");
-    } else {
-      renderSetup();
-      showView("setup");
-    }
+    renderCurrentState();
   }
 
   function showToast(message) {
@@ -198,13 +200,6 @@
     const hours = Math.floor(total / 60);
     const minutes = total % 60;
     return `${hours}時間${minutes ? `${minutes}分` : ""}`;
-  }
-
-  function renderSetup() {
-    ui.setupError.hidden = true;
-    byId("cancel-plan").hidden = !state.plan;
-    byId("quick-start").hidden = Boolean(state.plan);
-    byId("oracle-start").hidden = false;
   }
 
   async function createPlan(title, domains, pack = null) {
@@ -240,9 +235,8 @@
     }
     if (!await saveState(next)) return;
     clearPlanInputs();
-    renderPlan();
-    showView("plan");
-    if (location.hash) location.hash = "home";
+    renderCurrentState();
+    if (location.hash && location.hash !== "#home") location.hash = "home";
     startPractice("mini");
   }
 
@@ -283,6 +277,9 @@
     const stats = engine.computePlanStats(plan, state.records);
     const plans = library.plansIn(state).sort((a, b) =>
       a.generatedAt.localeCompare(b.generatedAt) || a.id.localeCompare(b.id));
+    byId("saved-materials").hidden = plans.length < 2;
+    byId("oracle-start").hidden = plans.some((entry) => entry.packId === oracle.id);
+    byId("quick-start").hidden = plans.some((entry) => entry.trial);
     ui.planSelect.replaceChildren(...plans.map((entry, index) => {
       const option = createNode("option", "", `${index + 1}. ${entry.config.title}（${formatDate(entry.config.startDate)} 開始）`);
       option.value = entry.id;
@@ -563,7 +560,6 @@
   function renderPractice() {
     const { today, records, schedule, progress, habit } = practiceContext();
     const isOracle = state.plan.packId === oracle.id;
-    byId("trial-oracle-start").hidden = !state.plan.trial;
     timedMock.setMaterial(isOracle ? oracle.exam : null, state.plan.qualificationId || state.plan.id);
     byId("oracle-diagnosis").hidden = !isOracle;
     if (isOracle && !practice) renderOracleDiagnosis(schedule, records, today, progress.lastSeen);
@@ -886,8 +882,8 @@
     if (!await saveState({ plan: null, otherPlans: [], records: [], items: [], harvests: [], resetAt })) return;
     timedMock.clear();
     clearPlanInputs();
-    renderSetup();
-    showView("setup");
+    renderCurrentState();
+    if (location.hash) location.hash = "home";
     showToast("すべてのデータを削除しました");
   }
 
@@ -968,26 +964,13 @@
   }
 
   byId("quick-start").addEventListener("click", () => {
-    if (saving || state.plan) return;
+    if (saving) return;
     createPlan("お試し学習", [trialQuestions.domain]);
   });
-  async function startOracle() {
+  byId("oracle-start").addEventListener("click", () => {
     if (saving) return;
-    const existing = library.plansIn(state).filter((plan) => plan.packId === oracle.id)
-      .sort((a, b) => b.generatedAt.localeCompare(a.generatedAt))[0];
-    if (existing) {
-      if (!await saveState(library.selectPlan(state, existing))) return;
-      clearPlanInputs();
-      renderPlan();
-      showView("plan");
-      if (location.hash) location.hash = "home";
-      startPractice("mini");
-      return;
-    }
-    await createPlan(oracle.title, [...new Set(oracle.cards.map((card) => card.domain))], oracle);
-  }
-  byId("oracle-start").addEventListener("click", startOracle);
-  byId("trial-oracle-start").addEventListener("click", startOracle);
+    createPlan(oracle.title, [...new Set(oracle.cards.map((card) => card.domain))], oracle);
+  });
   ui.recordForm.addEventListener("submit", submitRecord);
   ui.reviewForm.addEventListener("submit", submitReviewItem);
   byId("start-mini").addEventListener("click", () => startPractice("mini"));
@@ -1028,17 +1011,6 @@
     byId("pass-confirmation").hidden = true;
     byId("record-pass").focus();
   });
-  byId("add-plan").addEventListener("click", () => {
-    if (saving) return;
-    renderSetup();
-    showView("setup");
-    byId("oracle-start").focus({ preventScroll: true });
-  });
-  byId("cancel-plan").addEventListener("click", () => {
-    if (saving) return;
-    showView("plan");
-    byId("add-plan").focus({ preventScroll: true });
-  });
   ui.planSelect.addEventListener("change", switchPlan);
   ui.allRecords.addEventListener("change", () => { recordLimit = 30; renderRecords(); });
   byId("reset-all").addEventListener("click", resetAll);
@@ -1051,9 +1023,8 @@
     ui.accountMenu.open = false;
   });
   byId("brand-button").addEventListener("click", () => {
-    if (state.plan && !practice) location.hash = "home";
-    if (state.plan) { renderPlan(); showView("plan"); }
-    else showView("setup");
+    if (!practice && state.plan) location.hash = "home";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   async function initialize() {
@@ -1062,17 +1033,11 @@
       state = normalizeState(await storage.load());
     } catch (error) {
       console.warn("保存データを読み込めませんでした。", error);
-      ui.setupError.textContent = "端末の保存領域を開けませんでした。別のタブを閉じ、再読み込みしてください。";
-      ui.setupError.hidden = false;
+      ui.homeError.textContent = "端末の保存領域を開けませんでした。別のタブを閉じ、再読み込みしてください。";
+      ui.homeError.hidden = false;
       return;
     }
-    if (state.plan) {
-      renderPlan();
-      showView("plan");
-    } else {
-      renderSetup();
-      showView("setup");
-    }
+    renderCurrentState();
     await initializeGoogleSync();
   }
 
