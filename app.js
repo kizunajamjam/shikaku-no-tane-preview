@@ -596,6 +596,7 @@
   function renderPractice() {
     const { today, records, schedule, progress, habit } = practiceContext();
     const isOracle = state.plan.packId === oracle.id;
+    byId("trial-oracle-start").hidden = !state.plan.trial;
     timedMock.setMaterial(isOracle ? oracle.exam : null, state.plan.qualificationId || state.plan.id);
     byId("oracle-diagnosis").hidden = !isOracle;
     if (isOracle && !practice) renderOracleDiagnosis(schedule, records, today, progress.lastSeen);
@@ -1007,7 +1008,7 @@
     createPlan({ title: "お試し学習", startDate, targetDate: engine.addDays(startDate, 28),
       daysPerWeek: 1, minutesPerSession: 5, domains: [trialQuestions.domain], level: "beginner" }, true);
   });
-  byId("oracle-start").addEventListener("click", async () => {
+  async function startOracle() {
     if (saving || revisingGoal) return;
     const existing = library.plansIn(state).filter((plan) => plan.packId === oracle.id)
       .sort((a, b) => b.generatedAt.localeCompare(a.generatedAt))[0];
@@ -1022,7 +1023,9 @@
     }
     await createPlan({ ...formConfig(), title: oracle.title,
       domains: [...new Set(oracle.cards.map((card) => card.domain))] }, false, oracle);
-  });
+  }
+  byId("oracle-start").addEventListener("click", startOracle);
+  byId("trial-oracle-start").addEventListener("click", startOracle);
   ui.recordForm.addEventListener("submit", submitRecord);
   ui.reviewForm.addEventListener("submit", submitReviewItem);
   byId("start-mini").addEventListener("click", () => startPractice("mini"));

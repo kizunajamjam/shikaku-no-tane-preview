@@ -13,7 +13,7 @@
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
   <link rel="preload" href="fonts/dotgothic16.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -56,7 +56,10 @@
       <div class="setup-intro">
         <h1 id="setup-title">自分のペースで<br><span>資格の勉強</span>を始める</h1>
         <p>1問解いたら、芽が出た。</p>
-        <button type="button" id="quick-start" class="primary-button quick-start" hidden>お試しで1問解く</button>
+        <div class="setup-actions">
+          <button type="button" id="oracle-start" class="primary-button" hidden>Oracle Silver DBA の問題を解く</button>
+          <button type="button" id="quick-start" class="ghost-button" hidden>学び方を1問試す</button>
+        </div>
         <div class="principle-grid" aria-label="設計原則">
           <article><strong>思い出す</strong><small>資料を閉じて答える</small></article>
           <article><strong>間隔を空ける</strong><small>別の日にもう一度解く</small></article>
@@ -69,7 +72,6 @@
         <fieldset class="setup-fields" disabled>
         <div class="form-heading">
           <h2 id="setup-heading">何を学びますか？</h2>
-          <button id="oracle-start" type="button" class="ghost-button">Oracle Silver DBA の試験対策を始める</button>
           <p>資格名は任意です。今は仮の目標名でも構いません。</p>
         </div>
         <div class="field full-field">
@@ -111,6 +113,7 @@
           <p id="daily-streak"></p>
           <p id="challenge-intro"></p>
           <button type="button" class="primary-button" id="start-mini">今日のチャレンジを始める</button>
+          <button type="button" class="ghost-button trial-oracle-start" id="trial-oracle-start" hidden>Oracle Silver DBA の問題を解く</button>
         </div>
         <div class="quest">
           <div><strong id="quest-title"></strong><span id="quest-count"></span></div>
@@ -181,6 +184,7 @@
           <p id="oracle-coverage"></p>
           <button type="button" class="ghost-button" id="oracle-next"></button>
           <details><summary>全分野の内訳</summary><ul id="oracle-domains"></ul></details>
+          <p><a href="https://www.oracle.com/a/ocom/docs/dc/ww-ou-5297-database2019-studyguide-5.pdf#page=13">Oracle公式サンプル問題（英語・PDF）</a></p>
         </section>
         <details class="mock-method"><summary>想定合格率の見方</summary><p>直近の模試の正答数を使い、同じ問題数・難度の模試で設定ラインに届く確率を推定します。実試験の出題配分や合否データによる補正はしていません。問いの偏りや自己採点で値が変わります。</p></details>
         </div>
@@ -365,6 +369,6 @@
   <script src="google-sync.js?v=11"></script>
   <script src="study-storage.js"></script>
   <script src="calendar-reminder.js"></script>
-  <script src="app.js?v=38"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>
