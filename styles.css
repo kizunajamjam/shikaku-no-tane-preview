@@ -294,7 +294,13 @@ main { min-height: calc(100vh - 72px); }
   100% { transform: scale(1); }
 }
 #practice-run { overflow-wrap: anywhere; }
-.practice-answer { margin: 12px 0; padding: 12px 14px; border-left: 3px solid var(--line-bright); background: var(--surface-2); font-size: .9375rem; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+.practice-answer { margin: 12px 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); font-size: .9375rem; line-height: 1.65; overflow-wrap: anywhere; }
+.practice-answer dl { display: grid; gap: 12px; margin: 0; }
+.practice-answer dt { margin-bottom: 3px; color: var(--muted); font-size: .8125rem; font-weight: 700; }
+.practice-answer dd { margin: 0; white-space: pre-wrap; }
+#practice-answer-text { font-weight: 700; }
+#practice-explanation { padding-top: 12px; border-top: 1px solid var(--line); }
+#practice-source { display: inline-block; margin-top: 10px; color: var(--accent); font-size: .8125rem; }
 .practice-feedback { color: var(--muted); font-size: .875rem; line-height: 1.6; }
 .practice-actions { margin-top: 24px; align-items: center; }
 .challenge-result { margin-top: 26px; padding: clamp(18px, 4vw, 30px); border-radius: 14px; background: var(--surface-2); }

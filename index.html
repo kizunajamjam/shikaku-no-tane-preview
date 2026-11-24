@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="stylesheet" href="styles.css?v=45">
+  <link rel="stylesheet" href="styles.css?v=46">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
@@ -85,7 +85,14 @@
           <h2 id="practice-question" tabindex="-1"></h2>
           <p id="practice-verdict" class="answer-status" role="status"></p>
           <div class="practice-choices" id="practice-choices"></div>
-          <p class="practice-answer" id="practice-answer" hidden></p>
+          <div class="practice-answer" id="practice-answer" hidden>
+            <dl>
+              <div id="practice-selected-answer" hidden><dt>あなたの回答</dt><dd></dd></div>
+              <div><dt id="practice-answer-label">答え</dt><dd id="practice-answer-text"></dd></div>
+              <div id="practice-explanation" hidden><dt>解説</dt><dd></dd></div>
+            </dl>
+            <a id="practice-source" target="_blank" rel="noopener noreferrer" hidden>Oracle公式資料で確認</a>
+          </div>
           <p class="practice-feedback" id="practice-feedback"></p>
           <div class="practice-actions">
             <button type="button" id="reveal-answer" class="primary-button">答えを確かめる</button>
@@ -329,6 +336,6 @@
   <script src="google-sync.js?v=11"></script>
   <script src="study-storage.js"></script>
   <script src="calendar-reminder.js"></script>
-  <script src="app.js?v=44"></script>
+  <script src="app.js?v=46"></script>
 </body>
 </html>

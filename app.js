@@ -660,19 +660,20 @@
     if (gradedChoice) verdict.dataset.result = wrongChoice ? "incorrect" : "correct";
     else delete verdict.dataset.result;
     verdict.textContent = gradedChoice ? (wrongChoice ? "× 不正解" : "✓ 正解") : stage === "saved" ? practice.selfAssessment : "";
-    byId("practice-answer").textContent = stage === "question" ? "" :
-      (wrongChoice ? "あなたの回答　" + practice.selectedChoice + "\n" : "") +
-      (gradedChoice ? "正しい答え　" : "") + item.answer + (item.explanation ? "\n\n解説　" + item.explanation : "");
     byId("practice-answer").hidden = stage === "question";
-    if (stage !== "question" && state.plan.packId === oracle.id) {
-      const card = oracle.cards.find((entry) => entry.id === item.cardId);
-      if (card) {
-        const source = createNode("a", "", "Oracle公式資料で確認");
-        source.href = "https://docs.oracle.com/en/database/oracle/oracle-database/19/" + card.doc;
-        source.target = "_blank";
-        source.rel = "noopener noreferrer";
-        byId("practice-answer").append(document.createElement("br"), source);
-      }
+    if (stage !== "question") {
+      const selected = byId("practice-selected-answer");
+      selected.hidden = !wrongChoice;
+      selected.querySelector("dd").textContent = wrongChoice ? practice.selectedChoice : "";
+      byId("practice-answer-label").textContent = gradedChoice ? "正しい答え" : "答え";
+      byId("practice-answer-text").textContent = item.answer;
+      const explanation = byId("practice-explanation");
+      explanation.hidden = !item.explanation;
+      explanation.querySelector("dd").textContent = item.explanation || "";
+      const card = state.plan.packId === oracle.id && oracle.cards.find((entry) => entry.id === item.cardId);
+      const source = byId("practice-source");
+      source.hidden = !card;
+      if (card) source.href = "https://docs.oracle.com/en/database/oracle/oracle-database/19/" + card.doc;
     }
     const choiceBox = byId("practice-choices");
     choiceBox.replaceChildren();
